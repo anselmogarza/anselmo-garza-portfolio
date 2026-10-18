@@ -12,7 +12,18 @@ state model; it does not run Playwright, C#, or a real database.
 
 ## Content
 
-The CV is downloadable as plain text. Confirmed career progression: Junior QA
+The CV is downloadable as `Anselmo_Garza_CV.pdf`, with selectable text and
+clickable email and portfolio links. A plain-text alternative is also available.
+Regenerate the two-page PDF after editing the text CV:
+
+```sh
+node quality-lab/build-cv.cjs
+```
+
+Run this command from the repository root. No PDF dependencies are required.
+The hosted portfolio remains private; its link requires authorized access.
+
+Confirmed career progression: Junior QA
 Dev Engineer at Epicor from January 2013 to January 2016, Senior QA Dev Engineer
 since January 2016, and four-person regression QA team leadership since May 2026.
 Suite execution times are approximate and compare unchanged scope: full

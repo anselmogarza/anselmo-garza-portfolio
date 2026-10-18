@@ -35,10 +35,18 @@ replace browser testing for layout or accessibility.
 
 - `quality-lab/dist/` — website source and downloadable CV
 - `quality-lab/check-demo.cjs` — interaction checks
+- `quality-lab/build-cv.cjs` — regenerates the PDF from the plain-text CV
 - `quality-lab/.openai/hosting.json` — Sites deployment configuration
 
 The deployment archive is generated output and is excluded from Git.
 See [project notes](quality-lab/README.md) for content and hosting details.
+
+## Sharing your CV
+
+Attach `quality-lab/dist/Anselmo_Garza_CV.pdf` to recruiter emails. It includes
+clickable email and portfolio links. The website offers PDF and plain-text
+downloads. The hosted site remains private, so the portfolio link requires
+authorized access; the attached PDF can be read independently.
 
 ## Content review
 
