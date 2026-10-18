@@ -7,34 +7,34 @@
 <main id="main"><div class="breadcrumbs"><a href="index.html">Home</a> / Migration Workshop</div>
 <section class="section workshop-intro"><p class="eyebrow">MIGRATION WORKSHOP / CASE 002</p><h1>Preserve the intent.<br><em>Modernize the execution.</em></h1><p class="intro">An open-window test is a useful migration baseline: sign in, open a screen, check its initial state, close it, verify cleanup, and sign out.</p><span class="pill">SIMPLIFIED C# EXCERPTS · SOURCE REVIEW ONLY</span></section>
 <section class="section"><h2>The contract stays recognizable.</h2><p>The supplied example checks titles, four visible tabs, one enabled tab, the default selection, focused and required fields, empty values, unchecked flags, and browser-page cleanup. The async rewrite also adds a heading assertion.</p><p>The goal is traceable coverage. Similar-looking code alone does not prove that selectors, timing, or close behavior work in the new client.</p>
-<div class="migration-grid"><article class="workspace"><div class="workspace-bar">BEFORE / SYNCHRONOUS FRAMEWORK</div><pre><code>// Simplified framework-style pseudocode
-var home = Login();
-var screen = home.OpenWindow("Settings");
+<div class="migration-grid"><article class="workspace"><div class="workspace-bar">BEFORE / SYNCHRONOUS FRAMEWORK</div><pre class="csharp-editor" tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="cs-comment">// Simplified framework-style pseudocode</span>
+<span class="cs-keyword">var</span> home = <span class="cs-method">Login</span>();
+<span class="cs-keyword">var</span> screen = home.<span class="cs-method">OpenWindow</span>(<span class="cs-string">"Settings"</span>);
 
-Argue.AreEqual("Settings", () =&gt; screen.Title);
-Argue.AreEqual(4, () =&gt; screen.VisibleTabCount);
-Argue.IsTrue(() =&gt; screen.CodeField.IsRequired);
+<span class="cs-type">Argue</span>.<span class="cs-method">AreEqual</span>(<span class="cs-string">"Settings"</span>, () =&gt; screen.<span class="cs-property">Title</span>);
+<span class="cs-type">Argue</span>.<span class="cs-method">AreEqual</span>(<span class="cs-number">4</span>, () =&gt; screen.<span class="cs-property">VisibleTabCount</span>);
+<span class="cs-type">Argue</span>.<span class="cs-method">IsTrue</span>(() =&gt; screen.<span class="cs-property">CodeField</span>.<span class="cs-property">IsRequired</span>);
 
-screen.CloseAndConfirm();
-home.AssertBrowserWindowCount(1);
-home.Logout();</code></pre></article>
-<article class="workspace"><div class="workspace-bar">AFTER / INTENDED ASYNC FRAMEWORK</div><pre><code>// Illustrative; requires async retry overloads
-var home = await LoginAsync();
-var screen = await home.OpenWindowAsync&lt;SettingsScreen&gt;();
+screen.<span class="cs-method">CloseAndConfirm</span>();
+home.<span class="cs-method">AssertBrowserWindowCount</span>(<span class="cs-number">1</span>);
+home.<span class="cs-method">Logout</span>();</code></pre></article>
+<article class="workspace"><div class="workspace-bar">AFTER / INTENDED ASYNC FRAMEWORK</div><pre class="csharp-editor" tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="cs-comment">// Illustrative; requires async retry overloads</span>
+<span class="cs-keyword">var</span> home = <span class="cs-control">await</span> <span class="cs-method">LoginAsync</span>();
+<span class="cs-keyword">var</span> screen = <span class="cs-control">await</span> home.<span class="cs-method">OpenWindowAsync</span>&lt;<span class="cs-type">SettingsScreen</span>&gt;();
 
-await Argue.AreEqual("Settings", () =&gt; screen.TitleAsync());
-await Argue.AreEqual(4, () =&gt; screen.VisibleTabCountAsync());
-await Argue.IsTrue(() =&gt; screen.CodeField.IsRequiredAsync());
+<span class="cs-control">await</span> <span class="cs-type">Argue</span>.<span class="cs-method">AreEqual</span>(<span class="cs-string">"Settings"</span>, () =&gt; screen.<span class="cs-method">TitleAsync</span>());
+<span class="cs-control">await</span> <span class="cs-type">Argue</span>.<span class="cs-method">AreEqual</span>(<span class="cs-number">4</span>, () =&gt; screen.<span class="cs-method">VisibleTabCountAsync</span>());
+<span class="cs-control">await</span> <span class="cs-type">Argue</span>.<span class="cs-method">IsTrue</span>(() =&gt; screen.<span class="cs-property">CodeField</span>.<span class="cs-method">IsRequiredAsync</span>());
 
-await screen.CloseAsync();
-await home.AssertBrowserTabCount();
-await home.LogoutAsync();</code></pre></article></div>
+<span class="cs-control">await</span> screen.<span class="cs-method">CloseAsync</span>();
+<span class="cs-control">await</span> home.<span class="cs-method">AssertBrowserTabCount</span>();
+<span class="cs-control">await</span> home.<span class="cs-method">LogoutAsync</span>();</code></pre></article></div>
 <p class="muted">These excerpts explain a framework design; they are not standalone runnable tests or standard Playwright API examples. Internal paths, product-specific classes, and field identifiers have been omitted.</p></section>
-<section class="section"><h2>Why the assertion shape matters.</h2><div class="case-card"><div class="case-summary"><h3>Awaiting a read is different from retrying an observation.</h3><pre><code>// Reads once, then compares once
-Assert.AreEqual(4, await ReadTabCountAsync());
+<section class="section"><h2>Why the assertion shape matters.</h2><div class="case-card"><div class="case-summary"><h3>Awaiting a read is different from retrying an observation.</h3><pre class="csharp-editor" tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="cs-comment">// Reads once, then compares once</span>
+<span class="cs-type">Assert</span>.<span class="cs-method">AreEqual</span>(<span class="cs-number">4</span>, <span class="cs-control">await</span> <span class="cs-method">ReadTabCountAsync</span>());
 
-// The helper can re-read while waiting
-await Argue.AreEqual(4, () =&gt; ReadTabCountAsync());</code></pre></div><div class="case-detail"><div><span>01</span><div><h4>Keep the observation inside the delegate</h4><p>A retry-capable helper invokes the delegate again on each attempt. Passing a previously read value cannot observe later UI changes.</p></div></div><div><span>02</span><div><h4>Bound the wait and explain failure</h4><p>The custom helper needs a timeout, polling policy, async support, and useful diagnostics. Its name alone does not guarantee those behaviors.</p></div></div><div><span>03</span><div><h4>Retry observations, not side effects</h4><p>Read titles, tab counts, and field state repeatedly. Keep login, navigation, save, and close actions outside assertion polling.</p></div></div></div></div></section>
+<span class="cs-comment">// The helper can re-read while waiting</span>
+<span class="cs-control">await</span> <span class="cs-type">Argue</span>.<span class="cs-method">AreEqual</span>(<span class="cs-number">4</span>, () =&gt; <span class="cs-method">ReadTabCountAsync</span>());</code></pre></div><div class="case-detail"><div><span>01</span><div><h4>Keep the observation inside the delegate</h4><p>A retry-capable helper invokes the delegate again on each attempt. Passing a previously read value cannot observe later UI changes.</p></div></div><div><span>02</span><div><h4>Bound the wait and explain failure</h4><p>The custom helper needs a timeout, polling policy, async support, and useful diagnostics. Its name alone does not guarantee those behaviors.</p></div></div><div><span>03</span><div><h4>Retry observations, not side effects</h4><p>Read titles, tab counts, and field state repeatedly. Keep login, navigation, save, and close actions outside assertion polling.</p></div></div></div></div></section>
 <section class="section"><h2>Review migration parity explicitly.</h2><div class="workspace parity"><table><caption>Source-level mapping and verification still required</caption><thead><tr><th scope="col">Area</th><th scope="col">Migration intent</th><th scope="col">Verification required</th></tr></thead><tbody>
 <tr><th scope="row">Session & navigation</th><td>Async login and typed window opening</td><td>Confirm the same screen and authenticated state.</td></tr>
 <tr><th scope="row">Titles & tabs</th><td>Preserve title, visibility, enabled-count, and selection checks</td><td>Confirm async helpers re-observe the live UI.</td></tr>
