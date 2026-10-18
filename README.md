@@ -18,6 +18,10 @@ CSS, and JavaScript; no installation or build step is required.
 The application and incident are fictional browser simulations. They do not
 execute C#, Playwright, or database operations.
 
+The linked Migration Workshop compares simplified Selenium-style and intended
+async framework excerpts, explains observation retries, and maps coverage and
+verification gaps. It is a source-review case, not an executed migration test.
+
 ## Verification
 
 With Node.js installed, run from the repository root:

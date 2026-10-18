@@ -21,7 +21,7 @@ endobj
 << /Type /Annot /Subtype /Link /Rect [48 702 200 717] /Border [0 0 0] /A << /S /URI /URI (mailto:jose.anselmo@gmail.com) >> >>
 endobj
 8 0 obj
-<< /Length 5791 >>
+<< /Length 5792 >>
 stream
 0.15 0.42 0.32 rg BT /F2 23 Tf 1 0 0 1 48 745 Tm (ANSELMO GARZA) Tj ET
 0.12 0.17 0.16 rg BT /F2 10 Tf 1 0 0 1 48 724 Tm (Senior QA Dev Engineer | QA Automation & Technical Leadership) Tj ET
@@ -60,18 +60,18 @@ stream
 0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 270 Tm (- Migrate legacy Selenium/Angular automation to Playwright/Blazor while) Tj ET
 0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 257 Tm (  maintaining coverage parity with the legacy client, adding tests,) Tj ET
 0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 244 Tm (  reporting defects, repairing framework issues, and validating manually.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 231 Tm (- Lead a four-person regression QA team, assigning work, managing priorities,) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 218 Tm (  reviewing code, mentoring teammates, and providing performance feedback) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 205 Tm (  to management.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 192 Tm (- Assumed team leadership during a management transition, maintaining) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 179 Tm (  continuity of regression testing, environment operations, and releases.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 166 Tm (- Reduce suite execution times by approximately 50% through parallelization) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 153 Tm (  with unchanged test scope: full regression 16 to 8 hours, Open suite) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 140 Tm (  12 to 6 hours, and Retrieve suite 8 to 4 hours.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 127 Tm (- Implement and maintain Azure DevOps test pipelines; coordinate execution) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 114 Tm (  and analyze results across multiple client configurations.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 101 Tm (- Coordinate regression validation for SQL Server 2025 and Linux migrations,) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 88 Tm (  alongside Azure DevOps and virtual-machine maintenance.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 231 Tm (- Map legacy test intent to async workflows, including UI state assertions,) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 218 Tm (  synchronization requirements, and browser cleanup checks.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 205 Tm (- Lead a four-person regression QA team, assigning work, managing priorities,) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 192 Tm (  reviewing code, mentoring teammates, and providing performance feedback) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 179 Tm (  to management.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 166 Tm (- Assumed team leadership during a management transition, maintaining) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 153 Tm (  continuity of regression testing, environment operations, and releases.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 140 Tm (- Reduce suite execution times by approximately 50% through parallelization) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 127 Tm (  with unchanged test scope: full regression 16 to 8 hours, Open suite) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 114 Tm (  12 to 6 hours, and Retrieve suite 8 to 4 hours.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 101 Tm (- Implement and maintain Azure DevOps test pipelines; coordinate execution) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 88 Tm (  and analyze results across multiple client configurations.) Tj ET
 0.12 0.17 0.16 rg BT /F1 8 Tf 1 0 0 1 48 32 Tm (Anselmo Garza | CV                                      1) Tj ET
 endstream
 endobj
@@ -85,37 +85,39 @@ endobj
 << /Type /Annot /Subtype /Link /Rect [48 702 200 717] /Border [0 0 0] /A << /S /URI /URI (mailto:jose.anselmo@gmail.com) >> >>
 endobj
 12 0 obj
-<< /Length 3367 >>
+<< /Length 3618 >>
 stream
 0.15 0.42 0.32 rg BT /F2 23 Tf 1 0 0 1 48 745 Tm (ANSELMO GARZA) Tj ET
 0.12 0.17 0.16 rg BT /F2 10 Tf 1 0 0 1 48 724 Tm (Senior QA Dev Engineer | QA Automation & Technical Leadership) Tj ET
 0.12 0.17 0.16 rg BT /F1 9 Tf 1 0 0 1 48 706 Tm (jose.anselmo@gmail.com) Tj ET
 0.15 0.42 0.32 rg BT /F2 9 Tf 1 0 0 1 398 706 Tm (Portfolio / Quality Lab) Tj ET
 0.82 0.87 0.82 RG 0.7 w 48 695 m 547 695 l S
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 675 Tm (- Own regression QA sign-off: require blocking defects to be resolved and) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 662 Tm (  fixes retested before providing a positive release-readiness recommendation.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 649 Tm (- Coordinate code-cut activities, including test-repository branching,) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 636 Tm (  deployment and database preparation, documentation, and weekly reports.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 623 Tm (- Define client-migration QA strategy and introduce AI-assisted workflows) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 610 Tm (  for Selenium-to-Playwright migration, regression analysis, and Jira reporting.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 597 Tm (- Create reusable AI skills that review developer PR changes and recommend) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 584 Tm (  relevant test suites for targeted validation.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 571 Tm (- Investigate pipeline, deployment, test, and artifact failures using TRX) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 558 Tm (  analysis, focused reruns, SQL Server tools, PowerShell, and IIS diagnostics.) Tj ET
-0.12 0.17 0.16 rg BT /F2 9.5 Tf 1 0 0 1 48 538 Tm (Junior QA Dev Engineer | January 2013 - January 2016) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 525 Tm (- Created and maintained Selenium WebDriver/NUnit automation and framework) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 512 Tm (  components for Epicor HCM.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 499 Tm (- Designed and executed tests for benefits, absences, time-off requests,) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 486 Tm (  and related HR workflows.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 473 Tm (- Performed cross-browser validation and tracked defects in Jira.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 453 Tm (Recognition: Epicor top 5% of performers in 2015.) Tj ET
-0.12 0.17 0.16 rg BT /F2 9.5 Tf 1 0 0 1 48 433 Tm (DEXTRA TECHNOLOGIES | October 2011 - December 2012) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 420 Tm (Mobile application quality assurance) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 407 Tm (- Evaluated applications against Nokia Store requirements and quality policies.) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 394 Tm (- Supported consistent testing through peer review and process guidance.) Tj ET
-0.15 0.42 0.32 rg BT /F2 10.5 Tf 1 0 0 1 48 374 Tm (EDUCATION) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 361 Tm (Bachelor's Degree in Computer Systems Administration) Tj ET
-0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 348 Tm (Autonomous University of Nuevo Leon | FIME | Graduated 2010) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 675 Tm (- Coordinate regression validation for SQL Server 2025 and Linux migrations,) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 662 Tm (  alongside Azure DevOps and virtual-machine maintenance.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 649 Tm (- Own regression QA sign-off: require blocking defects to be resolved and) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 636 Tm (  fixes retested before providing a positive release-readiness recommendation.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 623 Tm (- Coordinate code-cut activities, including test-repository branching,) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 610 Tm (  deployment and database preparation, documentation, and weekly reports.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 597 Tm (- Define client-migration QA strategy and introduce AI-assisted workflows) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 584 Tm (  for Selenium-to-Playwright migration, regression analysis, and Jira reporting.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 571 Tm (- Create reusable AI skills that review developer PR changes and recommend) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 558 Tm (  relevant test suites for targeted validation.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 545 Tm (- Investigate pipeline, deployment, test, and artifact failures using TRX) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 532 Tm (  analysis, focused reruns, SQL Server tools, PowerShell, and IIS diagnostics.) Tj ET
+0.12 0.17 0.16 rg BT /F2 9.5 Tf 1 0 0 1 48 512 Tm (Junior QA Dev Engineer | January 2013 - January 2016) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 499 Tm (- Created and maintained Selenium WebDriver/NUnit automation and framework) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 486 Tm (  components for Epicor HCM.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 473 Tm (- Designed and executed tests for benefits, absences, time-off requests,) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 460 Tm (  and related HR workflows.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 447 Tm (- Performed cross-browser validation and tracked defects in Jira.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 427 Tm (Recognition: Epicor top 5% of performers in 2015.) Tj ET
+0.12 0.17 0.16 rg BT /F2 9.5 Tf 1 0 0 1 48 407 Tm (DEXTRA TECHNOLOGIES | October 2011 - December 2012) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 394 Tm (Mobile application quality assurance) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 381 Tm (- Evaluated applications against Nokia Store requirements and quality policies.) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 368 Tm (- Supported consistent testing through peer review and process guidance.) Tj ET
+0.15 0.42 0.32 rg BT /F2 10.5 Tf 1 0 0 1 48 348 Tm (EDUCATION) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 335 Tm (Bachelor's Degree in Computer Systems Administration) Tj ET
+0.12 0.17 0.16 rg BT /F1 9.5 Tf 1 0 0 1 48 322 Tm (Autonomous University of Nuevo Leon | FIME | Graduated 2010) Tj ET
 0.12 0.17 0.16 rg BT /F1 8 Tf 1 0 0 1 48 32 Tm (Anselmo Garza | CV                                      2) Tj ET
 endstream
 endobj
@@ -133,13 +135,13 @@ xref
 0000000390 00000 n 
 0000000561 00000 n 
 0000000703 00000 n 
-0000006546 00000 n 
-0000006704 00000 n 
-0000006876 00000 n 
-0000007019 00000 n 
-0000010439 00000 n 
+0000006547 00000 n 
+0000006705 00000 n 
+0000006877 00000 n 
+0000007020 00000 n 
+0000010691 00000 n 
 trailer
 << /Size 14 /Root 1 0 R /Info 5 0 R >>
 startxref
-10601
+10853
 %%EOF

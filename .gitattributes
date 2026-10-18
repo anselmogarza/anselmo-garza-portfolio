@@ -1,2 +1,5 @@
 # Keep text files consistent across Windows, macOS, and Linux.
 * text=auto eol=lf
+
+# Generated documents must retain their byte offsets and line endings.
+*.pdf binary

@@ -37,6 +37,8 @@ Regression QA team leadership | May 2026 - Present
 - Migrate legacy Selenium/Angular automation to Playwright/Blazor while
   maintaining coverage parity with the legacy client, adding tests,
   reporting defects, repairing framework issues, and validating manually.
+- Map legacy test intent to async workflows, including UI state assertions,
+  synchronization requirements, and browser cleanup checks.
 - Lead a four-person regression QA team, assigning work, managing priorities,
   reviewing code, mentoring teammates, and providing performance feedback
   to management.

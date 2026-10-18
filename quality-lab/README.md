@@ -12,6 +12,16 @@ state model; it does not run Playwright, C#, or a real database.
 
 ## Content
 
+`dist/migration.html` adds a source-review migration workshop inspired by a
+supplied open-window example. Excerpts use generic identifiers and explain the
+intended async retry contract, coverage mapping, and unresolved runtime checks.
+No compilation, execution, retry implementation, or full parity is claimed.
+The async cleanup example uses `await home.AssertBrowserTabCount();`; its
+default expected count and retry behavior require framework verification.
+Both HTML pages share navigation with a direct Migration Workshop link and
+an Overview link back to the portfolio. The workshop also has a breadcrumb
+and footer link home.
+
 The CV is downloadable as `Anselmo_Garza_CV.pdf`, with selectable text and
 clickable email and portfolio links. A plain-text alternative is also available.
 Regenerate the two-page PDF after editing the text CV:
