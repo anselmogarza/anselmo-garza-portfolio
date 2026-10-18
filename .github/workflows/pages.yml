@@ -28,9 +28,13 @@ jobs:
         with:
           node-version: '22'
       - name: Validate JavaScript
-        run: node --check quality-lab/dist/app.js
+        run: |
+          node --check quality-lab/dist/app.js
+          node --check quality-lab/dist/migration-sim.js
       - name: Check interactive demo
         run: node quality-lab/check-demo.cjs
+      - name: Check migration simulation
+        run: node quality-lab/check-migration.cjs
       - name: Generate CV
         run: node quality-lab/build-cv.cjs
       - name: Check site links and PDF

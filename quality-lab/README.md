@@ -16,6 +16,17 @@ state model; it does not run Playwright, C#, or a real database.
 supplied open-window example. Excerpts use generic identifiers and explain the
 intended async retry contract, coverage mapping, and unresolved runtime checks.
 No compilation, execution, retry implementation, or full parity is claimed.
+The collapsible browser playground executes JavaScript against a mock Settings
+screen. Delayed rendering is 1.1 seconds; optional retries poll every 100ms up
+to 1.8 seconds. One-shot checks expose the timing failure. Both success and
+failure clean up the mock session; reset cancels a pending run. The highlighted
+C# is illustrative and includes additional state checks beyond the short excerpt.
+`node quality-lab/check-migration.cjs` verifies the runner with a virtual clock.
+Optional browser QA on Windows with installed Edge and Node.js 22+:
+`node quality-lab/check-migration-browser.cjs`. Set `EDGE_PATH` if Edge is
+installed elsewhere. This uses a temporary browser profile, checks real DOM
+behavior and mobile width, and writes screenshots to the OS temporary folder.
+It does not run the displayed C# or validate the employer framework.
 The async cleanup example uses `await home.AssertBrowserTabCount();`; its
 default expected count and retry behavior require framework verification.
 Both HTML pages share navigation with a direct Migration Workshop link and

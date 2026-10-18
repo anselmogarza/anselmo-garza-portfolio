@@ -24,7 +24,9 @@ execute C#, Playwright, or database operations.
 
 The linked Migration Workshop compares simplified Selenium-style and intended
 async framework excerpts, explains observation retries, and maps coverage and
-verification gaps. It is a source-review case, not an executed migration test.
+verification gaps. Expand **Try the migration** to run a JavaScript simulation
+against a mock Settings UI. Compare delayed rendering with one-shot and bounded
+retry assertions. This does not execute C#, Playwright, or the employer framework.
 
 ## Verification
 
@@ -33,6 +35,7 @@ With Node.js installed, run from the repository root:
 ```sh
 node --check quality-lab/dist/app.js
 node quality-lab/check-demo.cjs
+node quality-lab/check-migration.cjs
 node quality-lab/build-cv.cjs
 node quality-lab/check-site.cjs
 ```
@@ -73,5 +76,6 @@ leadership since May 2026, migration framework ownership, approximately 50%
 shorter suite execution times with unchanged scope, and AI-assisted QA workflows.
 Company benchmark documents and internal artifacts are not included.
 
-Confirm official English degree wording before formal applications. Browser
-visual verification is still outstanding.
+Confirm official English degree wording before formal applications. The migration
+playground has desktop/mobile Edge checks; the rest of the portfolio still
+needs a full visual review.
