@@ -1,0 +1,79 @@
+ANSELMO GARZA
+Senior QA Dev Engineer | QA Automation & Technical Leadership
+jose.anselmo@gmail.com
+English: Advanced professional proficiency | Spanish: Native
+
+PROFILE
+Senior QA Dev Engineer specializing in C#/.NET automation, Playwright,
+Blazor, and CI/CD. Leads a four-person regression QA team while owning
+framework automation for a major UI client migration. Reduced execution times
+by approximately 50% across three suites without reducing test scope.
+Develops AI-assisted workflows for test migration, regression analysis,
+Jira reporting, and change-based test-suite recommendations.
+
+TECHNICAL SKILLS
+Automation: C#, .NET, Playwright, Selenium WebDriver, NUnit, MSTest
+Delivery: Azure DevOps, Azure Repos, Git, Jenkins, Groovy, parallel execution
+Diagnostics: PowerShell, IIS, AppCmd, TRX analysis, focused reruns
+Data and environments: SQL Server, SSMS, SQLCMD, backup/restore workflows,
+virtual-machine maintenance, SQL Server 2025 and Linux migration validation
+Leadership: Work allocation, prioritization, code reviews, mentoring,
+release QA sign-off, stakeholder updates, migration test strategy
+AI-assisted engineering: Reusable skills for test migration, regression
+analysis, Jira reporting, and PR-based test-suite recommendations
+Practices: End-to-end testing, manual validation, defect investigation,
+execution-time measurement, documentation, Agile/Scrum
+Domains: Prophet 21 ERP, human capital management
+Additional exposure: Basic API testing with Postman
+
+EXPERIENCE
+EPICOR SOFTWARE | January 2013 - Present
+
+Senior QA Dev Engineer | January 2016 - Present
+Regression QA team leadership | May 2026 - Present
+- Own the automation framework for a Blazor UI client migration from a
+  client-server architecture to a server-only architecture, adapting tests
+  to changes in rendering, layouts, and application behavior.
+- Migrate legacy Selenium/Angular automation to Playwright/Blazor while
+  maintaining coverage parity with the legacy client, adding tests,
+  reporting defects, repairing framework issues, and validating manually.
+- Lead a four-person regression QA team, assigning work, managing priorities,
+  reviewing code, mentoring teammates, and providing performance feedback
+  to management.
+- Assumed team leadership during a management transition, maintaining
+  continuity of regression testing, environment operations, and releases.
+- Reduce suite execution times by approximately 50% through parallelization
+  with unchanged test scope: full regression 16 to 8 hours, Open suite
+  12 to 6 hours, and Retrieve suite 8 to 4 hours.
+- Implement and maintain Azure DevOps test pipelines; coordinate execution
+  and analyze results across multiple client configurations.
+- Coordinate regression validation for SQL Server 2025 and Linux migrations,
+  alongside Azure DevOps and virtual-machine maintenance.
+- Own regression QA sign-off: require blocking defects to be resolved and
+  fixes retested before providing a positive release-readiness recommendation.
+- Coordinate code-cut activities, including test-repository branching,
+  deployment and database preparation, documentation, and weekly reports.
+- Define client-migration QA strategy and introduce AI-assisted workflows
+  for Selenium-to-Playwright migration, regression analysis, and Jira reporting.
+- Create reusable AI skills that review developer PR changes and recommend
+  relevant test suites for targeted validation.
+- Investigate pipeline, deployment, test, and artifact failures using TRX
+  analysis, focused reruns, SQL Server tools, PowerShell, and IIS diagnostics.
+
+Junior QA Dev Engineer | January 2013 - January 2016
+- Created and maintained Selenium WebDriver/NUnit automation and framework
+  components for Epicor HCM.
+- Designed and executed tests for benefits, absences, time-off requests,
+  and related HR workflows.
+- Performed cross-browser validation and tracked defects in Jira.
+
+Recognition: Epicor top 5% of performers in 2015.
+
+DEXTRA TECHNOLOGIES | October 2011 - December 2012
+Mobile application quality assurance
+- Evaluated applications against Nokia Store requirements and quality policies.
+- Supported consistent testing through peer review and process guidance.
+
+EDUCATION
+Bachelor's Degree in Computer Systems Administration
+Autonomous University of Nuevo Leon | FIME | Graduated 2010
