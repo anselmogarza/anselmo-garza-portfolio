@@ -31,7 +31,9 @@ node quality-lab/build-cv.cjs
 ```
 
 Run this command from the repository root. No PDF dependencies are required.
-The hosted portfolio remains private; its link requires authorized access.
+The PDF links to the public GitHub Pages portfolio:
+https://anselmogarza.github.io/anselmo-garza-portfolio/
+The separate ChatGPT Sites deployment remains private.
 
 Confirmed career progression: Junior QA
 Dev Engineer at Epicor from January 2013 to January 2016, Senior QA Dev Engineer
@@ -48,4 +50,6 @@ The order app and incident case are fictional, not employer artifacts.
 ## Hosting
 
 `.openai/hosting.json` declares `dist` as the static output directory.
+GitHub Actions publishes the same directory to GitHub Pages after validation.
+The PDF generator uses the public Pages URL so it can be shared with recruiters.
 Google Fonts is optional; system font fallbacks work offline.

@@ -1,7 +1,7 @@
 // Dependency-free, selectable-text PDF generated from the plain-text CV.
 const fs = require('node:fs');
 const path = require('node:path');
-const site = 'https://anselmo-garza-quality-lab.rubybread7.chatgpt.site';
+const site = 'https://anselmogarza.github.io/anselmo-garza-portfolio';
 const source = fs.readFileSync(path.join(__dirname, 'dist/anselmo-garza-cv.txt'), 'utf8').trim().split(/\r?\n/);
 const escape = (value) => value.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
 const objects = [null];

@@ -3,6 +3,10 @@
 A professional portfolio with an interactive Quality Lab and an Incident Desk
 case study, showcasing QA automation, troubleshooting, and release engineering.
 
+Public portfolio: https://anselmogarza.github.io/anselmo-garza-portfolio/
+
+PDF CV: https://anselmogarza.github.io/anselmo-garza-portfolio/Anselmo_Garza_CV.pdf
+
 ## View locally
 
 Open `quality-lab/dist/index.html` in your browser. The site uses plain HTML,
@@ -29,6 +33,8 @@ With Node.js installed, run from the repository root:
 ```sh
 node --check quality-lab/dist/app.js
 node quality-lab/check-demo.cjs
+node quality-lab/build-cv.cjs
+node quality-lab/check-site.cjs
 ```
 
 The automated check covers failing and corrected event ordering, verification,
@@ -49,8 +55,16 @@ See [project notes](quality-lab/README.md) for content and hosting details.
 
 Attach `quality-lab/dist/Anselmo_Garza_CV.pdf` to recruiter emails. It includes
 clickable email and portfolio links. The website offers PDF and plain-text
-downloads. The hosted site remains private, so the portfolio link requires
-authorized access; the attached PDF can be read independently.
+downloads. The GitHub Pages deployment is public and requires no visitor
+account. The separate ChatGPT Sites deployment remains private.
+
+## GitHub Pages deployment
+
+`.github/workflows/pages.yml` validates the demo, regenerates the PDF, checks
+local links, and publishes only `quality-lab/dist/` on pushes to `main`.
+The repository must be public for GitHub Free hosting. In repository settings,
+select **Pages > Build and deployment > Source > GitHub Actions**.
+No custom domain, paid plan, or server is required.
 
 ## Content review
 
