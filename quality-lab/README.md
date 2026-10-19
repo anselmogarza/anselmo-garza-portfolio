@@ -12,28 +12,20 @@ state model; it does not run Playwright, C#, or a real database.
 
 ## Content
 
-`dist/game.html` adds The Uncollectible Coin, a single-screen stick figure
-platformer and collision investigation. Normal movement passes, but endpoint-only
-pickup checks miss fast crossings and controlled frame hitches. A +20px hitbox
-patch passes the original fast reproduction while failing a larger crossing and
-incorrectly collecting a near miss. Regression unlocks a swept movement-path fix
-that preserves the original coin bounds and passes the same five checks.
+`dist/game.html` adds The Missing Point, a single-screen stick figure platformer.
+Touching the coin removes it, but a visibility check after removal skips the score
+update. Run one pickup replay, inspect two assertions (coin removed and score
+increased), follow the short event timeline, apply the fix, and rerun the same test.
+The fix records collection and awards the point before hiding the coin, guarded
+against duplicate pickups. Retesting also invokes the pickup callback again to
+verify no additional point is awarded. Manual play and replay share all movement
+and pickup code. Restart play keeps the current fix; Reset investigation restores
+the bug, clears evidence, and cancels an in-flight replay.
 
-Manual play offers normal, fast, and simulated hitch conditions. Replays isolate
-horizontal movement with gravity paused and use the same pickup detector as play.
-The hitch models a 180ms gap at 1,500px/s (270px), without stalling the browser.
-The evidence overlay preserves before/after positions and the crossing path.
-The regression matrix checks normal movement, fast crossing, hitch, near miss,
-and collecting exactly once. Applying either change leaves verification pending;
-only a full passing regression marks the path fix verified. Reset cancels replay,
-clears evidence and results, and restores the endpoint detector.
-
-Run `node quality-lab/check-game.cjs` for all three detector matrices, shared manual
-behavior, geometric edge cases, single jump, bounds, and landing. Optional Windows
-browser QA with installed Edge and Node.js 22+:
-`node quality-lab/check-game-browser.cjs`. It checks the full investigation,
-regression gates, replay cancellation, and mobile layout; screenshots go to the OS
-temporary folder. Set `EDGE_PATH` for another Edge location.
+Run `node quality-lab/check-game.cjs` for the failing/passing pickup, event order,
+duplicate guard, single jump, bounds, and landing. Optional Windows browser QA:
+`node quality-lab/check-game-browser.cjs` (installed Edge and Node.js 22+).
+Screenshots go to the OS temporary folder; set `EDGE_PATH` for another Edge location.
 
 `dist/migration.html` adds a source-review migration workshop inspired by a
 supplied open-window example. Excerpts use generic identifiers and explain the

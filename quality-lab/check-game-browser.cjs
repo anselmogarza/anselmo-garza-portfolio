@@ -137,16 +137,36 @@ async function screenshot(filename) {
     mobile: false,
   });
   await waitFor('Boolean(window.PickupGame)');
+  assert.equal(
+    await evaluate('document.querySelectorAll("select").length'),
+    0,
+    'No scenario selectors',
+  );
   await evaluate('document.getElementById("test").click()');
   await waitFor(
     'document.getElementById("result").textContent.startsWith("FAIL")',
   );
+  assert.equal(
+    await evaluate(
+      'document.querySelectorAll("#assertions .check-pass").length',
+    ),
+    1,
+  );
+  assert.equal(
+    await evaluate(
+      'document.querySelectorAll("#assertions .check-fail").length',
+    ),
+    1,
+  );
+  assert.equal(
+    await evaluate('document.getElementById("count").textContent'),
+    'Score: 0 / 1',
+  );
   assert(
     await evaluate(
-      'document.getElementById("observations").textContent.includes("Endpoint overlap: no")',
+      'document.getElementById("timeline").textContent.includes("Score update skipped")',
     ),
   );
-  assert(await evaluate('document.getElementById("hitboxes").checked'));
   await screenshot('quality-lab-game-desktop.png');
   await evaluate('document.getElementById("fix").click()');
   assert(
@@ -154,60 +174,42 @@ async function screenshot(filename) {
       'document.getElementById("result").textContent.includes("pending")',
     ),
   );
+  assert.equal(
+    await evaluate('document.querySelectorAll("#assertions p").length'),
+    0,
+    'Old assertions cleared',
+  );
   await evaluate('document.getElementById("test").click()');
   await waitFor(
     'document.getElementById("result").textContent.startsWith("PASS")',
   );
-  await evaluate('document.getElementById("suite").click()');
-  assert(
-    await evaluate(
-      'document.getElementById("result").textContent.includes("3 / 5")',
-    ),
-  );
   assert.equal(
-    await evaluate('document.querySelectorAll("#matrix .case-fail").length'),
+    await evaluate(
+      'document.querySelectorAll("#assertions .check-pass").length',
+    ),
     2,
   );
-  assert(await evaluate('!document.getElementById("proper-fix").disabled'));
-  await evaluate('document.getElementById("proper-fix").click()');
-  assert(
-    await evaluate(
-      'document.getElementById("result").textContent.includes("pending")',
-    ),
-  );
-  await evaluate('document.getElementById("suite").click()');
   assert.equal(
-    await evaluate('document.querySelectorAll("#matrix .case-pass").length'),
-    5,
+    await evaluate('document.getElementById("count").textContent'),
+    'Score: 1 / 1',
   );
   assert.equal(
     await evaluate('document.getElementById("mode").textContent'),
-    'VERIFIED · 5 / 5',
+    'FIX VERIFIED',
   );
-  await evaluate(
-    'document.getElementById("scenario").value="hitch"; document.getElementById("test").click()',
+  assert(
+    await evaluate(
+      'document.getElementById("result").textContent.includes("no extra point")',
+    ),
   );
+  await evaluate('document.getElementById("restart-play").click()');
   await waitFor(
-    'document.getElementById("result").textContent.startsWith("PASS")',
-  );
-  assert.equal(
-    await evaluate('document.getElementById("count").textContent'),
-    'Collected: 1 / 1',
-  );
-  await evaluate(
-    'document.getElementById("scenario").value="near"; document.getElementById("test").click()',
-  );
-  await waitFor(
-    'document.getElementById("result").textContent.startsWith("PASS")',
-  );
-  assert.equal(
-    await evaluate('document.getElementById("count").textContent'),
-    'Collected: 0 / 1',
+    'document.getElementById("count").textContent === "Score: 0 / 1"',
   );
   await evaluate(
     'document.getElementById("test").click(); document.getElementById("reset").click()',
   );
-  await sleep(1800);
+  await sleep(2800);
   assert(
     await evaluate(
       'document.getElementById("result").textContent.startsWith("Ready")',
@@ -215,15 +217,13 @@ async function screenshot(filename) {
   );
   assert.equal(
     await evaluate('document.getElementById("mode").textContent'),
-    'ENDPOINT CHECK',
+    'BUG PRESENT',
   );
-  assert(
-    await evaluate(
-      'document.getElementById("fix").disabled && document.getElementById("proper-fix").disabled',
-    ),
-  );
+  assert(await evaluate('document.getElementById("fix").disabled'));
   assert.equal(
-    await evaluate('document.querySelectorAll("#matrix tr").length'),
+    await evaluate(
+      'document.querySelectorAll("#assertions p,#timeline li").length',
+    ),
     0,
   );
   await send('Emulation.setDeviceMetricsOverride', {
@@ -238,7 +238,7 @@ async function screenshot(filename) {
   );
   await screenshot('quality-lab-game-mobile.png');
   console.log(
-    'PASS: reproduction, incomplete patch, regression failures, path fix, 5/5 verification, hitch, near miss, reset cancellation, and mobile layout.',
+    'PASS: missing-point reproduction, two assertions, timeline, fix, retest, duplicate guard, restart, reset cancellation, and mobile layout.',
   );
 })()
   .catch((error) => {

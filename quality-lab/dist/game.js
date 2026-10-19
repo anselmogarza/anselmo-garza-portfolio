@@ -4,22 +4,15 @@
     $ = (id) => document.getElementById(id);
   const canvas = $('game'),
     ctx = canvas.getContext('2d');
-  const labels = {
-    endpoint: 'ENDPOINT CHECK',
-    padded: 'QUICK PATCH',
-    swept: 'PATH FIX · UNVERIFIED',
-  };
-  let frozen = false;
-  let mode = 'endpoint',
+  let fixed = false,
     running = false,
+    frozen = false,
+    reproduced = false;
+  let state = gameModel.create(),
     tick = 0,
     previous = 0,
     accumulator = 0,
     jump = false;
-  let state = gameModel.create(mode),
-    replayId = 'fast',
-    reproduced = false,
-    regressionFailed = false;
   const held = new Set();
   function clear() {
     held.clear();
@@ -30,86 +23,81 @@
   }
   function buttons() {
     $('test').disabled = running;
-    $('suite').disabled = running;
-    $('scenario').disabled = running;
-    $('fix').disabled = running || !reproduced || mode !== 'endpoint';
-    $('proper-fix').disabled =
-      running || !regressionFailed || mode !== 'padded';
     $('restart-play').disabled = running;
+    $('fix').disabled = running || fixed || !reproduced;
   }
-  function setMode(next) {
-    frozen = false;
-    mode = next;
-    state = gameModel.create(mode);
-    clear();
-    $('mode').textContent = labels[mode];
-    $('mode').className = 'pill warning';
-    $('result').className = 'test-result';
-    $('result').textContent =
-      'Change applied · verification pending. Retest the reproduction, then run regression.';
-    $('matrix').replaceChildren();
-    buttons();
-  }
-  function showEvidence(trace) {
-    if (!trace) {
-      $('observations').textContent = 'No crossing recorded in this scenario.';
-      return;
-    }
-    $('observations').textContent =
-      'Previous x: ' +
-      trace.from.x +
-      ' → current x: ' +
-      trace.to.x +
-      ' (' +
-      trace.dx +
-      'px). Endpoint overlap: ' +
-      (trace.endpoint ? 'yes' : 'no') +
-      '. Path crosses coin: ' +
-      (trace.crossing ? 'yes' : 'no') +
-      '. Active detector accepted: ' +
-      (trace.detected ? 'yes' : 'no') +
-      '.';
+  function timeline() {
+    $('timeline').replaceChildren(
+      ...state.events.map((text) => {
+        const event = document.createElement('li');
+        event.textContent = text;
+        return event;
+      }),
+    );
   }
   function finish() {
     running = false;
     frozen = true;
     clear();
-    const scenario = gameModel.scenarios.find((item) => item.id === replayId);
-    const pass = state.count === scenario.expected;
-    if (mode === 'endpoint' && !pass && ['fast', 'hitch'].includes(replayId))
-      reproduced = true;
+    const removed = !state.coinVisible,
+      scored = state.count === 1;
+    const before = state.count;
+    // Simulate another pickup callback at the same location to check the guard.
+    gameModel.pickup(state);
+    const noDuplicate = state.count === before;
+    const pass = removed && scored && noDuplicate;
+    if (!pass) reproduced = true;
+    $('assertions').replaceChildren(
+      ...[
+        [removed, 'Coin removed', removed ? 'yes' : 'no', 'yes'],
+        [scored, 'Score increased', String(state.count), '1'],
+      ].map(([ok, name, actual, expected]) => {
+        const row = document.createElement('p');
+        row.className = ok ? 'check-pass' : 'check-fail';
+        row.textContent =
+          (ok ? 'PASS' : 'FAIL') +
+          ' · ' +
+          name +
+          ' — expected ' +
+          expected +
+          ', observed ' +
+          actual +
+          '.';
+        return row;
+      }),
+    );
     $('result').className = 'test-result ' + (pass ? 'pass' : 'fail');
-    $('result').textContent =
-      (pass ? 'PASS' : 'FAIL') +
-      ' · ' +
-      scenario.name +
-      ' · Expected pickups: ' +
-      scenario.expected +
-      '. Observed: ' +
-      state.count +
-      (mode === 'padded' && pass
-        ? '. One passing reproduction is not enough: run regression.'
-        : '.');
+    $('result').textContent = pass
+      ? 'PASS · Coin gone. Score 1/1. Repeated pickup awards no extra point.'
+      : 'FAIL · The coin disappeared, but the point was never awarded.';
+    $('mode').textContent = fixed && pass ? 'FIX VERIFIED' : 'BUG PRESENT';
+    $('mode').className = 'pill ' + (fixed && pass ? 'success' : 'warning');
+    timeline();
     $('evidence').open = true;
-    $('hitboxes').checked = true;
-    showEvidence(state.evidence || state.trace);
-    status(scenario.note);
     buttons();
+    status('Replay complete. Use Restart play to try it yourself.');
   }
   function advance() {
     if (running) {
-      gameModel.replayStep(state, replayId, tick++);
+      gameModel.step(state, gameModel.replayInput(tick++));
       if (tick === gameModel.replayTicks) finish();
     } else if (!frozen) {
-      const collected = state.collected;
+      const visible = state.coinVisible;
       gameModel.step(state, {
         left: held.has('left'),
         right: held.has('right'),
         jump,
-        condition: $('condition').value,
       });
-      if (!collected && state.collected)
-        status('Coin collected. Restart play to compare another condition.');
+      if (visible && !state.coinVisible) {
+        if (!fixed) reproduced = true;
+        timeline();
+        buttons();
+        status(
+          fixed
+            ? 'Coin gone and score 1/1. Run the pickup test to verify.'
+            : 'The coin vanished, but your score is still zero. Run the pickup test.',
+        );
+      }
     }
     jump = false;
   }
@@ -124,111 +112,62 @@
     requestAnimationFrame(frame);
   }
   $('test').onclick = () => {
-    frozen = true;
     clear();
-    replayId = $('scenario').value;
-    state = gameModel.replayState(mode, replayId);
+    state = gameModel.create(fixed);
     tick = 0;
     accumulator = 0;
     running = true;
-    $('matrix').replaceChildren();
+    frozen = false;
+    $('assertions').replaceChildren();
+    $('timeline').replaceChildren();
     $('result').className = 'test-result';
-    $('result').textContent = 'Replaying controlled movement…';
-    status(
-      'Recorded horizontal crossing: gravity is paused to isolate pickup detection.',
-    );
-    buttons();
-  };
-  $('suite').onclick = () => {
-    if (running) return;
-    const results = gameModel.scenarios.map((item) =>
-      gameModel.runCase(mode, item.id),
-    );
-    const passed = results.filter((item) => item.pass).length;
-    $('matrix').replaceChildren(
-      ...results.map((item) => {
-        const row = document.createElement('tr');
-        for (const text of [
-          item.name,
-          String(item.expected),
-          String(item.actual),
-          item.pass ? 'PASS' : 'FAIL',
-        ]) {
-          const cell = document.createElement('td');
-          cell.textContent = text;
-          row.append(cell);
-        }
-        row.className = item.pass ? 'case-pass' : 'case-fail';
-        return row;
-      }),
-    );
-    const pass = passed === results.length;
-    $('result').className = 'test-result ' + (pass ? 'pass' : 'fail');
     $('result').textContent =
-      (pass ? 'PASS' : 'FAIL') +
-      ' · Regression: ' +
-      passed +
-      ' / ' +
-      results.length +
-      (mode === 'padded'
-        ? '. Larger bounds hide the fast crossing but miss the hitch and collect the near miss.'
-        : mode === 'swept' && pass
-          ? '. Path detection passes the same five checks with the original coin bounds.'
-          : '. Compare passing normal movement with failing fast and hitch crossings.');
-    if (mode === 'padded' && !pass) regressionFailed = true;
-    if (mode === 'endpoint' && !pass) reproduced = true;
-    if (mode === 'swept' && pass) {
-      $('mode').textContent = 'VERIFIED · 5 / 5';
-      $('mode').className = 'pill success';
-    }
-    $('evidence').open = true;
+      'Running: move, jump, touch coin, check removal and score…';
+    status(
+      'The replay uses the same movement and pickup handler as manual play.',
+    );
     buttons();
   };
   $('fix').onclick = () => {
-    if (running || !reproduced || mode !== 'endpoint') return;
-    setMode('padded');
-    $('hitboxes').checked = true;
+    if (running || fixed || !reproduced) return;
+    fixed = true;
+    frozen = false;
+    clear();
+    state = gameModel.create(true);
+    $('mode').textContent = 'FIX APPLIED · UNVERIFIED';
+    $('mode').className = 'pill warning';
+    $('result').className = 'test-result';
+    $('result').textContent =
+      'Fix applied · verification pending. Rerun the same pickup test.';
+    $('assertions').replaceChildren();
+    $('test').textContent = '▶ Retest pickup';
     status(
-      'Quick patch: expand pickup bounds by 20px. Retest Fast crossing, then run regression.',
+      'The pickup now records the point and removes the coin together. Retest to verify.',
     );
-  };
-  $('proper-fix').onclick = () => {
-    if (running || !regressionFailed || mode !== 'padded') return;
-    setMode('swept');
-    $('hitboxes').checked = true;
-    status(
-      'Path fix: intersect the movement segment with the original coin bounds. Run regression to verify.',
-    );
+    buttons();
   };
   $('restart-play').onclick = () => {
     if (running) return;
     frozen = false;
     clear();
-    state = gameModel.create(mode);
-    status(
-      'Fresh attempt, same detector. Jump onto the platform; compare movement conditions.',
-    );
+    state = gameModel.create(fixed);
+    status('Fresh attempt. Move and jump onto the platform to touch the coin.');
   };
   $('reset').onclick = () => {
-    frozen = false;
-    running = reproduced = regressionFailed = false;
+    fixed = running = frozen = reproduced = false;
     tick = accumulator = 0;
-    mode = 'endpoint';
     clear();
     state = gameModel.create();
-    $('scenario').value = 'fast';
-    $('condition').value = 'normal';
-    $('mode').textContent = 'ENDPOINT CHECK';
+    $('mode').textContent = 'BUG PRESENT';
     $('mode').className = 'pill warning';
+    $('test').textContent = '▶ Run pickup test';
     $('result').className = 'test-result';
-    $('result').textContent =
-      'Ready. Compare normal movement with a fast crossing.';
-    $('matrix').replaceChildren();
-    $('observations').textContent = 'Run a replay to capture the crossing.';
-    $('hitboxes').checked = false;
+    $('result').textContent = 'Ready. Touch the coin, then check your score.';
+    $('assertions').replaceChildren();
+    $('timeline').replaceChildren();
     $('evidence').open = false;
     status(
-      'Jump onto the platform. Normal movement works; fast crossings can skip the coin.',
+      'Jump onto the platform and touch the coin. Watch both the coin and your score.',
     );
     buttons();
   };
@@ -250,7 +189,7 @@
     ctx.font = '12px Consolas, monospace';
     ctx.fillStyle = '#68746e';
     ctx.fillText('REACH THE COIN', 285, 293);
-    if (!state.collected) {
+    if (state.coinVisible) {
       ctx.fillStyle = '#e8b94d';
       ctx.beginPath();
       ctx.arc(
@@ -282,39 +221,7 @@
     ctx.lineTo(x, y + 26);
     ctx.lineTo(x + 9, y + 39);
     ctx.stroke();
-    if ($('hitboxes').checked) {
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = '#276b51';
-      ctx.strokeRect(state.x, state.y, state.w, state.h);
-      ctx.strokeRect(
-        gameModel.coin.x,
-        gameModel.coin.y,
-        gameModel.coin.w,
-        gameModel.coin.h,
-      );
-      const trace = state.evidence || state.trace;
-      if (trace) {
-        ctx.strokeStyle = '#667d91';
-        ctx.setLineDash([4, 4]);
-        ctx.strokeRect(trace.from.x, trace.from.y, state.w, state.h);
-        ctx.strokeRect(trace.to.x, trace.to.y, state.w, state.h);
-        ctx.beginPath();
-        ctx.moveTo(trace.from.x + 12, trace.from.y + 20);
-        ctx.lineTo(trace.to.x + 12, trace.to.y + 20);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#536b80';
-        ctx.fillText('PREVIOUS → CURRENT', 265, 120);
-      }
-      const h = gameModel.hitbox(state);
-      ctx.setLineDash([5, 4]);
-      ctx.strokeStyle = '#97632a';
-      ctx.strokeRect(h.x, h.y, h.w, h.h);
-      ctx.setLineDash([]);
-      ctx.fillStyle = '#805021';
-      ctx.fillText('PICKUP AREA', h.x + 30, h.y + 15);
-    }
-    $('count').textContent = 'Collected: ' + (state.collected ? 1 : 0) + ' / 1';
+    $('count').textContent = 'Score: ' + state.count + ' / 1';
   }
 
   const keys = {
