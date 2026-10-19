@@ -31,6 +31,10 @@ jobs:
         run: |
           node --check quality-lab/dist/app.js
           node --check quality-lab/dist/migration-sim.js
+          node --check quality-lab/dist/game-model.js
+          node --check quality-lab/dist/game.js
+      - name: Check game simulation
+        run: node quality-lab/check-game.cjs
       - name: Check interactive demo
         run: node quality-lab/check-demo.cjs
       - name: Check migration simulation

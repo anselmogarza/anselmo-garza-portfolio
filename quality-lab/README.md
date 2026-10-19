@@ -12,6 +12,18 @@ state model; it does not run Playwright, C#, or a real database.
 
 ## Content
 
+`dist/game.html` adds The Uncollectible Coin, a single-screen stick figure
+platform game with keyboard and touch controls. The pickup bounds initially
+sit 200 pixels above the visible coin. Run the deterministic replay, inspect
+hitboxes and collision evidence, apply the bounds fix, and rerun the same check.
+Manual play and replay share the physics in `game-model.js`. Reset cancels a
+running replay and restores the bug. Run `node quality-lab/check-game.cjs` to
+verify the pickup regression, single jump, landing, and screen boundaries.
+Optional Windows browser QA with installed Edge and Node.js 22+:
+`node quality-lab/check-game-browser.cjs`. This checks the actual replay,
+hitbox inspection, fix and retest, cancellation, and mobile layout; screenshots
+are written to the OS temporary folder. Set `EDGE_PATH` for another Edge location.
+
 `dist/migration.html` adds a source-review migration workshop inspired by a
 supplied open-window example. Excerpts use generic identifiers and explain the
 intended async retry contract, coverage mapping, and unresolved runtime checks.

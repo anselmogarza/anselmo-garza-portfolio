@@ -1,0 +1,128 @@
+.game-intro {
+  padding-top: 45px;
+  padding-bottom: 25px;
+}
+.game-intro .intro {
+  max-width: 620px;
+}
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.game-hud {
+  display: flex;
+  justify-content: space-between;
+  padding: 17px 20px;
+  font: 11px var(--mono);
+  gap: 12px;
+}
+.game-hud strong {
+  color: var(--green);
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #edf3e8;
+  outline-offset: -4px !important;
+}
+.game-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 16px 20px 0;
+  font-size: 12px;
+}
+.game-controls button {
+  touch-action: none;
+  user-select: none;
+  min-width: 48px;
+}
+.hint {
+  padding: 0 20px;
+  font-size: 11px;
+  color: var(--muted);
+}
+#play-status {
+  min-height: 36px;
+  color: var(--green);
+}
+.investigation {
+  padding: 24px;
+}
+.investigation h2 {
+  font-size: 24px;
+  margin-top: 12px;
+}
+.investigation p {
+  font-size: 13px;
+  color: var(--muted);
+}
+.investigation ol {
+  margin: 12px 0;
+}
+.investigation li {
+  padding: 8px 0;
+}
+.test-result {
+  margin: 20px 0;
+  padding: 14px;
+  background: #f0f3ed;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 12px;
+}
+.test-result.fail {
+  background: #fbf3e5;
+  color: #805021;
+}
+.test-result.pass {
+  background: #eaf2e6;
+  color: var(--green);
+}
+.investigation summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.investigation pre {
+  font: 11px/1.8 var(--mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.investigation details .button {
+  margin-top: 10px;
+}
+.investigation > .text-link {
+  display: block;
+  margin-top: 24px;
+}
+.game-limit {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 24px 0 50px;
+  max-width: 760px;
+}
+@media (max-width: 900px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+  }
+  .game-intro {
+    padding-top: 35px;
+  }
+  .game-hud {
+    font-size: 10px;
+  }
+  .game-controls {
+    padding: 12px;
+  }
+  .workspace-bar {
+    letter-spacing: 0;
+    gap: 8px;
+    font-size: 9px;
+  }
+}
