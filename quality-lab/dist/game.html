@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="Investigate an uncollectible coin in a tiny platform game. Fix the hitbox and rerun the same test."
+      content="Investigate intermittent coin pickup, challenge an incomplete fix, and verify movement-path collision detection."
     />
     <title>The Uncollectible Coin · Anselmo Garza</title>
     <link rel="stylesheet" href="styles.css" />
@@ -36,15 +36,15 @@
         <p class="eyebrow">GAME QA / CASE 003</p>
         <h1>A small jump.<br /><em>A stubborn little bug.</em></h1>
         <p class="intro">
-          Reach the coin. Find out why it won't collect. Fix the collision
-          bounds, then let the same test prove the change.
+          Walking works. A fast crossing fails. Try a plausible fix, uncover its
+          regressions, and follow the evidence to a better solution.
         </p>
       </section>
       <section class="game-layout" aria-label="Pickup investigation">
         <div class="workspace">
           <div class="workspace-bar">
             <span>THE UNCOLLECTIBLE COIN</span
-            ><span id="mode" class="pill warning">BUG PRESENT</span>
+            ><span id="mode" class="pill warning">ENDPOINT CHECK</span>
           </div>
           <div class="game-hud">
             <span>ONE SCREEN / ONE COIN</span
@@ -58,6 +58,16 @@
             aria-label="Platform game. Left and right arrows or A and D to move. Space or Up to jump. One jump per landing."
             >Use Run pickup test to follow the accessible results.</canvas
           >
+          <div class="game-controls">
+            <label
+              >Movement condition
+              <select id="condition">
+                <option value="normal">Normal · 3px/update</option>
+                <option value="fast">Fast · 90px/update</option>
+                <option value="hitch">Simulated hitch · 270px burst</option>
+              </select></label
+            ><button id="restart-play" class="button">Restart play</button>
+          </div>
           <div class="game-controls">
             <div role="group" aria-label="Movement controls">
               <button class="button" data-control="left" aria-label="Move left">
@@ -81,7 +91,8 @@
             landing.
           </p>
           <p id="play-status" class="hint" role="status">
-            Jump onto the platform and reach the coin.
+            Jump onto the platform. Normal movement works; fast crossings can
+            skip the coin.
           </p>
           <div class="workspace-foot">
             Browser simulation · Shared physics for play and replay · No
@@ -90,37 +101,81 @@
         </div>
         <aside class="workspace investigation">
           <span class="label">YOUR INVESTIGATION</span>
-          <h2>Touching isn't collecting.</h2>
-          <p>Expected: touching the coin collects it exactly once.</p>
+          <h2>It worked on my first try.</h2>
+          <p>
+            Expected: every true crossing collects once; a near miss collects
+            nothing. Why does normal movement pass while a fast crossing fails?
+          </p>
           <ol>
-            <li>Reproduce the failed pickup</li>
-            <li>Inspect the collision bounds</li>
-            <li>Apply the fix</li>
-            <li>Rerun the same check</li>
+            <li>Compare normal and fast movement</li>
+            <li>Inspect previous and current positions</li>
+            <li>Try a larger hitbox; challenge it with regression</li>
+            <li>Fix path detection and verify all five cases</li>
           </ol>
-          <button id="test" class="button primary">▶ Run pickup test</button>
+          <label class="scenario-label" for="scenario">Recorded scenario</label>
+          <select id="scenario">
+            <option value="normal">Normal movement</option>
+            <option value="fast" selected>Fast crossing</option>
+            <option value="hitch">Frame hitch · controlled 180ms gap</option>
+            <option value="near">Near miss · 8px above coin</option>
+            <option value="once">Collect only once · repeated crossings</option>
+          </select>
+          <div class="test-actions">
+            <button id="test" class="button primary">▶ Replay scenario</button
+            ><button id="suite" class="button">Run regression</button>
+          </div>
           <div id="result" class="test-result" role="status">
-            Ready. Play freely or run the automated replay.
+            Ready. Compare normal movement with a fast crossing.
+          </div>
+          <div class="matrix-wrap">
+            <table class="regression-table">
+              <caption>
+                Same expectations across all three detector versions
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Case</th>
+                  <th scope="col">Expected</th>
+                  <th scope="col">Actual</th>
+                  <th scope="col">Result</th>
+                </tr>
+              </thead>
+              <tbody id="matrix"></tbody>
+            </table>
           </div>
           <details id="evidence">
-            <summary>Evidence &amp; the fix</summary>
+            <summary>Evidence &amp; candidate fixes</summary>
             <p>
-              Green outlines show the player and visible coin. The dashed amber
-              pickup area floats 200 pixels above the coin before the fix.
+              Green outlines show the original bounds. Blue outlines and the
+              connecting line show previous → current positions. Amber marks the
+              active pickup area. A fast crossing can miss at both endpoints.
             </p>
-            <pre><code><span class="removed">// Before
-pickup.y = coin.y - 200;</span>
-<span class="added">// After
-pickup.y = coin.y;</span></code></pre>
-            <p id="observations">Run the test to capture collision evidence.</p>
-            <button id="fix" class="button" disabled>Apply hitbox fix</button>
+            <p id="observations">Run a replay to capture the crossing.</p>
+            <pre><code><span class="removed">// Original: observes only the final position
+collectIf(overlaps(current, coin));</span>
+// Quick patch: still checks only the endpoint
+collectIf(overlaps(current, expand(coin, 20)));
+<span class="added">// Proper fix: check the path, keep real bounds
+collectIf(crosses(previous, current, coin));
+// Award only if not already collected.</span></code></pre>
+            <button id="fix" class="button" disabled>
+              1. Try larger hitbox (+20px)
+            </button>
+            <p>
+              The quick patch must survive more than its original reproduction.
+            </p>
+            <button id="proper-fix" class="button" disabled>
+              2. Apply movement-path fix
+            </button>
           </details>
           <button id="reset" class="text-link">↺ Reset investigation</button>
         </aside>
       </section>
       <p class="game-limit">
-        This deterministic JavaScript test checks coin pickup. A production game
-        also needs broader collision, input, and device coverage.
+        Recorded replays isolate horizontal pickup by pausing gravity. The frame
+        hitch models a 180ms movement gap; it does not slow your browser. Manual
+        play and replays use the same pickup detector. Passing these five cases
+        does not establish production game readiness.
       </p>
     </main>
     <footer>

@@ -1,17 +1,25 @@
 (() => {
   'use strict';
   const gameModel = window.PickupGame,
-    $ = (id) => document.getElementById(id),
-    canvas = $('game'),
+    $ = (id) => document.getElementById(id);
+  const canvas = $('game'),
     ctx = canvas.getContext('2d');
-  let state = gameModel.create(),
-    fixed = false,
+  const labels = {
+    endpoint: 'ENDPOINT CHECK',
+    padded: 'QUICK PATCH',
+    swept: 'PATH FIX · UNVERIFIED',
+  };
+  let frozen = false;
+  let mode = 'endpoint',
     running = false,
-    failed = false,
     tick = 0,
     previous = 0,
     accumulator = 0,
     jump = false;
+  let state = gameModel.create(mode),
+    replayId = 'fast',
+    reproduced = false,
+    regressionFailed = false;
   const held = new Set();
   function clear() {
     held.clear();
@@ -20,6 +28,210 @@
   function status(text) {
     $('play-status').textContent = text;
   }
+  function buttons() {
+    $('test').disabled = running;
+    $('suite').disabled = running;
+    $('scenario').disabled = running;
+    $('fix').disabled = running || !reproduced || mode !== 'endpoint';
+    $('proper-fix').disabled =
+      running || !regressionFailed || mode !== 'padded';
+    $('restart-play').disabled = running;
+  }
+  function setMode(next) {
+    frozen = false;
+    mode = next;
+    state = gameModel.create(mode);
+    clear();
+    $('mode').textContent = labels[mode];
+    $('mode').className = 'pill warning';
+    $('result').className = 'test-result';
+    $('result').textContent =
+      'Change applied · verification pending. Retest the reproduction, then run regression.';
+    $('matrix').replaceChildren();
+    buttons();
+  }
+  function showEvidence(trace) {
+    if (!trace) {
+      $('observations').textContent = 'No crossing recorded in this scenario.';
+      return;
+    }
+    $('observations').textContent =
+      'Previous x: ' +
+      trace.from.x +
+      ' → current x: ' +
+      trace.to.x +
+      ' (' +
+      trace.dx +
+      'px). Endpoint overlap: ' +
+      (trace.endpoint ? 'yes' : 'no') +
+      '. Path crosses coin: ' +
+      (trace.crossing ? 'yes' : 'no') +
+      '. Active detector accepted: ' +
+      (trace.detected ? 'yes' : 'no') +
+      '.';
+  }
+  function finish() {
+    running = false;
+    frozen = true;
+    clear();
+    const scenario = gameModel.scenarios.find((item) => item.id === replayId);
+    const pass = state.count === scenario.expected;
+    if (mode === 'endpoint' && !pass && ['fast', 'hitch'].includes(replayId))
+      reproduced = true;
+    $('result').className = 'test-result ' + (pass ? 'pass' : 'fail');
+    $('result').textContent =
+      (pass ? 'PASS' : 'FAIL') +
+      ' · ' +
+      scenario.name +
+      ' · Expected pickups: ' +
+      scenario.expected +
+      '. Observed: ' +
+      state.count +
+      (mode === 'padded' && pass
+        ? '. One passing reproduction is not enough: run regression.'
+        : '.');
+    $('evidence').open = true;
+    $('hitboxes').checked = true;
+    showEvidence(state.evidence || state.trace);
+    status(scenario.note);
+    buttons();
+  }
+  function advance() {
+    if (running) {
+      gameModel.replayStep(state, replayId, tick++);
+      if (tick === gameModel.replayTicks) finish();
+    } else if (!frozen) {
+      const collected = state.collected;
+      gameModel.step(state, {
+        left: held.has('left'),
+        right: held.has('right'),
+        jump,
+        condition: $('condition').value,
+      });
+      if (!collected && state.collected)
+        status('Coin collected. Restart play to compare another condition.');
+    }
+    jump = false;
+  }
+  function frame(time) {
+    accumulator += Math.min((time - (previous || time)) / 1000, 0.1);
+    previous = time;
+    while (accumulator >= 1 / 60) {
+      advance();
+      accumulator -= 1 / 60;
+    }
+    draw();
+    requestAnimationFrame(frame);
+  }
+  $('test').onclick = () => {
+    frozen = true;
+    clear();
+    replayId = $('scenario').value;
+    state = gameModel.replayState(mode, replayId);
+    tick = 0;
+    accumulator = 0;
+    running = true;
+    $('matrix').replaceChildren();
+    $('result').className = 'test-result';
+    $('result').textContent = 'Replaying controlled movement…';
+    status(
+      'Recorded horizontal crossing: gravity is paused to isolate pickup detection.',
+    );
+    buttons();
+  };
+  $('suite').onclick = () => {
+    if (running) return;
+    const results = gameModel.scenarios.map((item) =>
+      gameModel.runCase(mode, item.id),
+    );
+    const passed = results.filter((item) => item.pass).length;
+    $('matrix').replaceChildren(
+      ...results.map((item) => {
+        const row = document.createElement('tr');
+        for (const text of [
+          item.name,
+          String(item.expected),
+          String(item.actual),
+          item.pass ? 'PASS' : 'FAIL',
+        ]) {
+          const cell = document.createElement('td');
+          cell.textContent = text;
+          row.append(cell);
+        }
+        row.className = item.pass ? 'case-pass' : 'case-fail';
+        return row;
+      }),
+    );
+    const pass = passed === results.length;
+    $('result').className = 'test-result ' + (pass ? 'pass' : 'fail');
+    $('result').textContent =
+      (pass ? 'PASS' : 'FAIL') +
+      ' · Regression: ' +
+      passed +
+      ' / ' +
+      results.length +
+      (mode === 'padded'
+        ? '. Larger bounds hide the fast crossing but miss the hitch and collect the near miss.'
+        : mode === 'swept' && pass
+          ? '. Path detection passes the same five checks with the original coin bounds.'
+          : '. Compare passing normal movement with failing fast and hitch crossings.');
+    if (mode === 'padded' && !pass) regressionFailed = true;
+    if (mode === 'endpoint' && !pass) reproduced = true;
+    if (mode === 'swept' && pass) {
+      $('mode').textContent = 'VERIFIED · 5 / 5';
+      $('mode').className = 'pill success';
+    }
+    $('evidence').open = true;
+    buttons();
+  };
+  $('fix').onclick = () => {
+    if (running || !reproduced || mode !== 'endpoint') return;
+    setMode('padded');
+    $('hitboxes').checked = true;
+    status(
+      'Quick patch: expand pickup bounds by 20px. Retest Fast crossing, then run regression.',
+    );
+  };
+  $('proper-fix').onclick = () => {
+    if (running || !regressionFailed || mode !== 'padded') return;
+    setMode('swept');
+    $('hitboxes').checked = true;
+    status(
+      'Path fix: intersect the movement segment with the original coin bounds. Run regression to verify.',
+    );
+  };
+  $('restart-play').onclick = () => {
+    if (running) return;
+    frozen = false;
+    clear();
+    state = gameModel.create(mode);
+    status(
+      'Fresh attempt, same detector. Jump onto the platform; compare movement conditions.',
+    );
+  };
+  $('reset').onclick = () => {
+    frozen = false;
+    running = reproduced = regressionFailed = false;
+    tick = accumulator = 0;
+    mode = 'endpoint';
+    clear();
+    state = gameModel.create();
+    $('scenario').value = 'fast';
+    $('condition').value = 'normal';
+    $('mode').textContent = 'ENDPOINT CHECK';
+    $('mode').className = 'pill warning';
+    $('result').className = 'test-result';
+    $('result').textContent =
+      'Ready. Compare normal movement with a fast crossing.';
+    $('matrix').replaceChildren();
+    $('observations').textContent = 'Run a replay to capture the crossing.';
+    $('hitboxes').checked = false;
+    $('evidence').open = false;
+    status(
+      'Jump onto the platform. Normal movement works; fast crossings can skip the coin.',
+    );
+    buttons();
+  };
   function draw() {
     ctx.clearRect(0, 0, 720, 400);
     ctx.strokeStyle = '#dce6d5';
@@ -80,6 +292,20 @@
         gameModel.coin.w,
         gameModel.coin.h,
       );
+      const trace = state.evidence || state.trace;
+      if (trace) {
+        ctx.strokeStyle = '#667d91';
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(trace.from.x, trace.from.y, state.w, state.h);
+        ctx.strokeRect(trace.to.x, trace.to.y, state.w, state.h);
+        ctx.beginPath();
+        ctx.moveTo(trace.from.x + 12, trace.from.y + 20);
+        ctx.lineTo(trace.to.x + 12, trace.to.y + 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#536b80';
+        ctx.fillText('PREVIOUS → CURRENT', 265, 120);
+      }
       const h = gameModel.hitbox(state);
       ctx.setLineDash([5, 4]);
       ctx.strokeStyle = '#97632a';
@@ -90,114 +316,7 @@
     }
     $('count').textContent = 'Collected: ' + (state.collected ? 1 : 0) + ' / 1';
   }
-  function finish() {
-    running = false;
-    clear();
-    $('test').disabled = false;
-    const pass = state.collected;
-    failed = !pass;
-    $('result').className = 'test-result ' + (pass ? 'pass' : 'fail');
-    $('result').textContent =
-      (pass ? 'PASS' : 'FAIL') +
-      ' · Expected collected: 1. Observed: ' +
-      (pass ? 1 : 0) +
-      '. Same ' +
-      gameModel.replayTicks +
-      '-step replay and pickup assertion.';
-    $('observations').textContent =
-      'Visible coin overlap: ' +
-      (state.contact ? 'yes' : 'no') +
-      '. Pickup offset: ' +
-      (fixed ? 0 : -gameModel.pickupOffset) +
-      'px. Collected: ' +
-      (pass ? 1 : 0) +
-      '.';
-    $('fix').disabled = fixed || !failed;
-    $('evidence').open = true;
-    if (!pass) $('hitboxes').checked = true;
-    status(
-      pass
-        ? 'Coin collected. The same pickup check now passes.'
-        : 'The player reached the visible coin, but its pickup area was elsewhere.',
-    );
-  }
-  function advance() {
-    const collected = state.collected,
-      contact = state.contact;
-    gameModel.step(
-      state,
-      running
-        ? gameModel.replayInput(tick++)
-        : { left: held.has('left'), right: held.has('right'), jump },
-    );
-    jump = false;
-    if (!running && !collected && state.collected)
-      status('Coin collected! Run the pickup test to verify the fix.');
-    else if (!running && !contact && state.contact && !state.collected)
-      status(
-        'You touched the coin, but it did not collect. Run the pickup test to investigate.',
-      );
-    if (running && tick === gameModel.replayTicks) finish();
-  }
-  function frame(time) {
-    accumulator += Math.min((time - (previous || time)) / 1000, 0.1);
-    previous = time;
-    while (accumulator >= 1 / 60) {
-      advance();
-      accumulator -= 1 / 60;
-    }
-    draw();
-    requestAnimationFrame(frame);
-  }
-  $('test').onclick = () => {
-    clear();
-    state = gameModel.create(fixed);
-    tick = 0;
-    running = true;
-    accumulator = 0;
-    $('test').disabled = true;
-    $('fix').disabled = true;
-    $('result').className = 'test-result';
-    $('result').textContent =
-      'Running: move → jump → overlap coin → assert collected count…';
-    status(
-      'Automated replay in progress. Manual controls resume when it finishes.',
-    );
-  };
-  $('fix').onclick = () => {
-    if (running || !failed || fixed) return;
-    fixed = true;
-    state = gameModel.create(true);
-    clear();
-    $('mode').textContent = 'FIX APPLIED';
-    $('mode').className = 'pill success';
-    $('fix').disabled = true;
-    $('fix').textContent = '✓ Hitbox fix applied';
-    $('test').textContent = '▶ Retest pickup';
-    $('result').className = 'test-result';
-    $('result').textContent =
-      'Fix applied · verification pending. Rerun the same check.';
-    status('Pickup bounds now follow the coin. Try it yourself or retest.');
-  };
-  $('reset').onclick = () => {
-    running = fixed = failed = false;
-    tick = accumulator = 0;
-    clear();
-    state = gameModel.create();
-    $('mode').textContent = 'BUG PRESENT';
-    $('mode').className = 'pill warning';
-    $('test').disabled = false;
-    $('test').textContent = '▶ Run pickup test';
-    $('fix').disabled = true;
-    $('fix').textContent = 'Apply hitbox fix';
-    $('result').className = 'test-result';
-    $('result').textContent = 'Ready. Play freely or run the automated replay.';
-    $('observations').textContent =
-      'Run the test to capture collision evidence.';
-    $('hitboxes').checked = false;
-    $('evidence').open = false;
-    status('Jump onto the platform and reach the coin.');
-  };
+
   const keys = {
     ArrowLeft: 'left',
     a: 'left',

@@ -7,9 +7,64 @@
 }
 .game-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr);
   gap: 24px;
   align-items: start;
+}
+.scenario-label {
+  display: block;
+  font-size: 12px;
+  margin: 16px 0 6px;
+}
+.game-layout select {
+  max-width: 100%;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+}
+.investigation > select {
+  width: 100%;
+}
+.test-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.matrix-wrap {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+.regression-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10px;
+  text-align: left;
+}
+.regression-table caption {
+  text-align: left;
+  color: var(--muted);
+  padding-bottom: 10px;
+}
+.regression-table th,
+.regression-table td {
+  padding: 8px 5px;
+  border-bottom: 1px solid var(--line);
+}
+.case-fail {
+  color: #805021;
+  background: #fbf3e5;
+}
+.case-pass {
+  color: var(--green);
+}
+select:focus-visible {
+  outline: 3px solid #448e69;
+  outline-offset: 3px;
 }
 .game-hud {
   display: flex;
