@@ -164,7 +164,7 @@ async function screenshot(filename) {
   );
   assert(
     await evaluate(
-      'document.getElementById("timeline").textContent.includes("Score update skipped")',
+      'document.getElementById("timeline").textContent.includes("Score unchanged")',
     ),
   );
   await screenshot('quality-lab-game-desktop.png');

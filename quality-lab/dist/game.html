@@ -111,18 +111,24 @@
               aria-label="Pickup event timeline"
             ></ul>
             <p>
-              The buggy handler hides the coin, then asks whether it is still
-              visible before awarding the point. That check is already false.
+              The buggy handler removes the coin but never awards its point. The
+              fix completes both parts of the pickup and guards against
+              duplicate awards. Each coin starts with collected: false and
+              value: 1; the player starts with score: 0.
             </p>
-            <pre><code><span class="removed">// Before: the score check happens too late
-coin.visible = false;
-if (coin.visible) score++;</span>
-<span class="added">// After: record the complete pickup once
-if (!collected) {
-  collected = true;
-  score++;
+            <pre><code class="language-js"><span class="removed">// Before: removes the coin but never awards its point
+function collectCoinBefore(coin) {
   coin.visible = false;
-}</span></code></pre>
+}</span>
+<span class="added">// After: complete the pickup once
+function collectCoin(coin, player) {
+  if (coin.collected) return;
+
+  coin.collected = true;
+  player.score += coin.value;
+  coin.visible = false;
+}</span>
+</code></pre>
             <button id="fix" class="button" disabled>Apply pickup fix</button>
             <p>
               Retesting also checks that a repeated pickup cannot award another

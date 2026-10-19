@@ -13,9 +13,9 @@ state model; it does not run Playwright, C#, or a real database.
 ## Content
 
 `dist/game.html` adds The Missing Point, a single-screen stick figure platformer.
-Touching the coin removes it, but a visibility check after removal skips the score
-update. Run one pickup replay, inspect two assertions (coin removed and score
+Touching the coin removes it, but the incomplete pickup handler never awards the point. Run one pickup replay, inspect two assertions (coin removed and score
 increased), follow the short event timeline, apply the fix, and rerun the same test.
+Each coin starts with collected: false and value: 1. The player starts with score: 0.
 The fix records collection and awards the point before hiding the coin, guarded
 against duplicate pickups. Retesting also invokes the pickup callback again to
 verify no additional point is awarded. Manual play and replay share all movement

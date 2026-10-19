@@ -16,32 +16,37 @@
       vy: 0,
       grounded: true,
       fixed,
-      coinVisible: true,
-      collected: false,
-      count: 0,
+      coin: { ...coin, visible: true, collected: false, value: 1 },
+      score: 0,
       events: [],
     };
   }
+  // Before: an incomplete handler only removes the coin.
+  function collectCoinBefore(coin) {
+    coin.visible = false;
+  }
+  // After: each coin records its own collection state, independent of visibility.
+  function collectCoin(coin, player) {
+    if (coin.collected) return;
+    coin.collected = true;
+    player.score += coin.value;
+    coin.visible = false;
+  }
   function pickup(s) {
-    if (!s.coinVisible || s.collected) return;
+    if (!s.coin.visible || s.coin.collected) return;
     s.events.push('Player touched the coin.');
     if (s.fixed) {
-      s.collected = true;
-      s.count++;
-      s.coinVisible = false;
+      collectCoin(s.coin, s);
       s.events.push(
         'Pickup recorded: score increased to 1.',
         'Coin removed from the screen.',
       );
     } else {
-      s.coinVisible = false;
-      s.events.push('Coin removed from the screen.');
-      // Intentional defect: visibility was changed before it is used as a guard.
-      if (s.coinVisible) {
-        s.collected = true;
-        s.count++;
-      } else
-        s.events.push('Score update skipped: the coin is no longer visible.');
+      collectCoinBefore(s.coin);
+      s.events.push(
+        'Coin removed from the screen.',
+        'Score unchanged: the pickup handler never awards the point.',
+      );
     }
   }
   function step(s, input = {}) {
@@ -84,6 +89,7 @@
     coin,
     create,
     pickup,
+    collectCoin,
     step,
     replayInput,
   };

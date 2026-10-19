@@ -39,18 +39,18 @@
     running = false;
     frozen = true;
     clear();
-    const removed = !state.coinVisible,
-      scored = state.count === 1;
-    const before = state.count;
+    const removed = !state.coin.visible,
+      scored = state.score === 1;
+    const before = state.score;
     // Simulate another pickup callback at the same location to check the guard.
     gameModel.pickup(state);
-    const noDuplicate = state.count === before;
+    const noDuplicate = state.score === before;
     const pass = removed && scored && noDuplicate;
     if (!pass) reproduced = true;
     $('assertions').replaceChildren(
       ...[
         [removed, 'Coin removed', removed ? 'yes' : 'no', 'yes'],
-        [scored, 'Score increased', String(state.count), '1'],
+        [scored, 'Score increased', String(state.score), '1'],
       ].map(([ok, name, actual, expected]) => {
         const row = document.createElement('p');
         row.className = ok ? 'check-pass' : 'check-fail';
@@ -82,13 +82,13 @@
       gameModel.step(state, gameModel.replayInput(tick++));
       if (tick === gameModel.replayTicks) finish();
     } else if (!frozen) {
-      const visible = state.coinVisible;
+      const visible = state.coin.visible;
       gameModel.step(state, {
         left: held.has('left'),
         right: held.has('right'),
         jump,
       });
-      if (visible && !state.coinVisible) {
+      if (visible && !state.coin.visible) {
         if (!fixed) reproduced = true;
         timeline();
         buttons();
@@ -189,7 +189,7 @@
     ctx.font = '12px Consolas, monospace';
     ctx.fillStyle = '#68746e';
     ctx.fillText('REACH THE COIN', 285, 293);
-    if (state.coinVisible) {
+    if (state.coin.visible) {
       ctx.fillStyle = '#e8b94d';
       ctx.beginPath();
       ctx.arc(
@@ -221,7 +221,7 @@
     ctx.lineTo(x, y + 26);
     ctx.lineTo(x + 9, y + 39);
     ctx.stroke();
-    $('count').textContent = 'Score: ' + state.count + ' / 1';
+    $('count').textContent = 'Score: ' + state.score + ' / 1';
   }
 
   const keys = {
